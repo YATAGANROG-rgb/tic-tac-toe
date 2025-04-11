@@ -1,0 +1,100 @@
+import random
+
+p_menu = ['|', '1', '|', '2', '|', '3', '|', '4', '|', '5', '|', '6', '|', '7', '|', '8', '|',  '9', '|']
+p = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+gamer = 'X'
+bot = 'O'
+game_status = True
+
+def move(x):
+    x -= 1
+    if p[x] == ' ':
+        p[x] = gamer
+    else:
+        return True
+
+
+def bot_move():
+    if p[4] == ' ':
+        p[4] = bot
+        return
+
+    for i in range(9):
+        if p[i] == ' ':
+            p[i] = bot
+            if check_win(p[i]):
+                return i
+            p[i] = ' '
+
+    for i in range(9):
+        if p[i] == ' ':
+            p[i] = gamer
+            if check_win(p[i]):
+                p[i] = bot
+                return i
+            p[i] = ' '
+
+    angles = [0, 2, 6, 8]
+    random.shuffle(angles)
+    for angle in angles:
+        if p[angle] == ' ':
+            p[angle] = bot
+            return
+
+    for i in range(9):
+        if p[i] == ' ':
+            p[i] = bot
+            return
+
+
+def check_win(x):
+    win_combinations = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]
+    for condition in win_combinations:
+        if p[condition[0]] == x and p[condition[1]] == x and p[condition[2]] == x:
+            if x == 'X':
+                return 1
+            else:
+                return 2
+
+
+x_in_position = 0
+print(f'{'-' * 13}  {'-' * 13}\n{' '.join(p_menu[0:7])}  | {' '.join(p[0])} | {' '.join(p[1])} | {' '.join(p[2])} |\n{'-' * 13}  {'-' * 13}'
+      f'\n{' '.join(p_menu[6:13])}  | {' '.join(p[3])} | {' '.join(p[4])} | {' '.join(p[5])} |\n{'-' * 13}  {'-' * 13}'
+      f'\n{' '.join(p_menu[12:19])}  | {' '.join(p[6])} | {' '.join(p[7])} | {' '.join(p[8])} |\n{'-' * 13}  {'-' * 13}')
+while game_status:
+    position_gamer = int(input('Site: '))
+    if move(position_gamer):
+        print('You cant go here.')
+    else:
+        bot_move()
+        print(
+            f'{'-' * 13}  {'-' * 13}\n{' '.join(p_menu[0:7])}  | {' '.join(p[0])} | {' '.join(p[1])} | {' '.join(p[2])} |\n{'-' * 13}  {'-' * 13}'
+            f'\n{' '.join(p_menu[6:13])}  | {' '.join(p[3])} | {' '.join(p[4])} | {' '.join(p[5])} |\n{'-' * 13}  {'-' * 13}'
+            f'\n{' '.join(p_menu[12:19])}  | {' '.join(p[6])} | {' '.join(p[7])} | {' '.join(p[8])} |\n{'-' * 13}  {'-' * 13}')
+    # print(f'{position_s[0:3]}\n{position_s[3:6]}\n{position_s[6:9]}')
+    # print('=' * 15)
+    if check_win(gamer) == 1:
+        game_status = False
+        print(
+            f'{'-' * 13}'
+            f'\n| {' '.join(p[0])} | {' '.join(p[1])} | {' '.join(p[2])} |\n{'-' * 13} \n| {' '.join(p[3])} | {' '.join(p[4])} | {' '.join(p[5])} |'
+            f'\n{'-' * 13}\n| {' '.join(p[6])} | {' '.join(p[7])} | {' '.join(p[8])} |\n{'-' * 13}')
+        print(f'Win {gamer}!')
+    elif check_win(bot) == 2:
+        game_status = False
+        print(
+            f'{'-' * 13}'
+            f'\n| {' '.join(p[0])} | {' '.join(p[1])} | {' '.join(p[2])} |\n{'-' * 13} \n| {' '.join(p[3])} | {' '.join(p[4])} | {' '.join(p[5])} |'
+            f'\n{'-' * 13}\n| {' '.join(p[6])} | {' '.join(p[7])} | {' '.join(p[8])} |\n{'-' * 13}')
+        print(f'Win {bot}!')
+    for i in range(9):
+        if p[i] == 'X':
+            x_in_position += 1
+            # print(x_in_position)
+    if x_in_position >= 15:
+        game_status = False
+        print(
+            f'{'-' * 13}'
+            f'\n| {' '.join(p[0])} | {' '.join(p[1])} | {' '.join(p[2])} |\n{'-' * 13} \n| {' '.join(p[3])} | {' '.join(p[4])} | {' '.join(p[5])} |'
+            f'\n{'-' * 13}\n| {' '.join(p[6])} | {' '.join(p[7])} | {' '.join(p[8])} |\n{'-' * 13}')
+        print(f'Draw!')
